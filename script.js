@@ -2,19 +2,15 @@ const html = document.querySelector("html");
 const banner = document.querySelector(".app__image");
 const titulo = document.querySelector(".app__title");
 const tempoNaTela = document.querySelector("#timer");
-
 const botoes = document.querySelectorAll(".app__card-button");
 const focoBt = document.querySelector(".app__card-button--foco");
 const curtoBt = document.querySelector(".app__card-button--curto");
 const longoBt = document.querySelector(".app__card-button--longo");
 const startPauseBt = document.querySelector("#start-pause");
 const iniciarOuPausarBt = document.querySelector("#start-pause span");
-
-const iniciarOuPausarBtIcone = document.querySelector(
-  ".app__card-primary-button-icon",
-);
-
+const iniciarOuPausarBtIcone = document.querySelector(".app__card-primary-button-icon");
 const musicaFocoInput = document.querySelector("#alternar-musica");
+
 const musica = new Audio("./sons/luna-rise-part-one.mp3");
 const musicaPlay = new Audio("./sons/play.wav");
 const musicaPause = new Audio("./sons/pause.mp3");
@@ -43,50 +39,35 @@ longoBt.addEventListener("click", () => {
 
 function alterarContexto(contexto) {
   mostrarTempo();
-  botoes.forEach(function (contexto) {
-    contexto.classList.remove("active");
-  });
+  botoes.forEach(btn => btn.classList.remove("active"));
   html.setAttribute("data-contexto", contexto);
   banner.setAttribute("src", `./imagens/${contexto}.png`);
 
   switch (contexto) {
     case "foco":
-      titulo.innerHTML = `Otimize sua produtividade,<br>
-      <strong class="app__title-strong">mergulhe no que importa.</strong>`;
+      titulo.innerHTML = `Otimize sua produtividade,<br><strong class="app__title-strong">mergulhe no que importa.</strong>`;
       break;
-
     case "descanso-curto":
-      titulo.innerHTML = `Que tal dar uma respirada?<br>
-      <strong class="app__title-strong">Faça uma pausa curta!</strong> `;
+      titulo.innerHTML = `Que tal dar uma respirada?<br><strong class="app__title-strong">Faça uma pausa curta!</strong>`;
       break;
-
     case "descanso-longo":
-      titulo.innerHTML = `Hora de voltar à superfície.<br> 
-      <strong class="app__title-strong">Faça uma pausa longa.</strong> `;
-      break;
-
-    default:
+      titulo.innerHTML = `Hora de voltar à superfície.<br><strong class="app__title-strong">Faça uma pausa longa.</strong>`;
       break;
   }
 }
 
 musica.loop = true;
 musicaFocoInput.addEventListener("change", () => {
-  if (musica.paused) {
-    musica.play();
-  } else {
-    musica.pause();
-  }
+  if (musica.paused) musica.play();
+  else musica.pause();
 });
 
 const contagemRegressiva = () => {
   if (tempoDecorridoEmSegundos <= 0) {
     musicaZero.play();
-    alert("tempo finalizado");
-    const focoAtivo = html.getAttribute("data-contexto") == "foco";
-    if (focoAtivo) {
-      const evento = new CustomEvent("FocoFinalizado");
-      document.dispatchEvent(evento);
+    alert("Tempo finalizado!");
+    if (html.getAttribute("data-contexto") === "foco") {
+      document.dispatchEvent(new CustomEvent("FocoFinalizado"));
     }
     zerar();
     return;
@@ -118,10 +99,7 @@ function zerar() {
 
 function mostrarTempo() {
   const tempo = new Date(tempoDecorridoEmSegundos * 1000);
-  const tempoFormatado = tempo.toLocaleTimeString("pt-BR", {
-    minute: "2-digit",
-    second: "2-digit",
-  });
+  const tempoFormatado = tempo.toLocaleTimeString("pt-BR", { minute: "2-digit", second: "2-digit" });
   tempoNaTela.innerHTML = `${tempoFormatado}`;
 }
 
